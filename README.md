@@ -1,38 +1,37 @@
-Learning Goals
-- Practice implementing classic divide-and-conquer algorithms.
-- Learn safe recursion patterns (avoiding stack overflows).
-- Analyze running-time recurrences using Master Theorem and Akra-Bazzi intuition.
-- Collect and compare simple metrics (time, recursion depth, comparisons).
-- Communicate results in a short report and maintain a clean Git history.
+Recursion Depth Control:
+- MergeSort: Regular binary splitting, but insertion sort cutoff (n < 15) prevents deep recursion on small arrays
+- QuickSort: Always recurse on smaller partition first, then iterate on larger - guarantees O(log n) stack depth
+- QuickSelect: Recurses only into needed side, uses insertion sort for n ≤ 10
+- Closest Pair: Standard binary splitting, base cases for n ≤ 3
 
-Implemented algorithms:
-1. MergeSort (Case 2 of Master Theorem)
-- Linear merge with a reusable buffer.
-- Uses insertion sort for small subarrays (cut-off ~15).
-- Expected complexity: (nlogn).
+ Memory Allocation Control:
+- MergeSort: Single buffer allocated once and reused for all merge operations
+- QuickSort: Fully in-place partitioning, no extra arrays
+- QuickSelect: In-place median-of-medians, minimal temporary storage
+- Closest Pair: Creates temporary strips during conquer phase, but sizes are O(n)
 
-2. QuickSort 
-- Randomized pivot selection.
-- Recurse on the smaller partition, iterate over the larger → recursion depth ≈ O(log n).
-- Expected complexity: O(nlogn), worst-case O(n²) avoided by randomization.
+Recurrence Analysis
 
-3. Deterministic Select (Median of Medians)
-- Groups of 5, median-of-medians pivot.
-- Only recurse into the needed side, always the smaller side.
-- Complexity: O(n).
+MergeSort
+Recurrence: T(n) = 2T(n/2) + O(n)  
+Method: Master Theorem Case 2  
+Result: Θ(n log n)  
+The work is split equally into two subproblems with linear merge cost. Master Theorem Case 2 applies directly since the work at each level is balanced and the merge is linear.
 
-4. Closest Pair of Points (2D)
-- Sort by x-coordinate, recursive split.
-- Uses strip check sorted by y (7–8 neighbour rule).
-- Complexity: O(nlogn).
+QuickSort
+Recurrence: T(n) = T(k) + T(n-k-1) + O(n) where k is pivot position  
+Method: Akra-Bazzi intuition for expected case  
+Result: Expected Θ(n log n)  
+With random pivot, partitions are usually balanced (k ≈ n/2). Akra-Bazzi handles the probabilistic split sizes. Worst case O(n²) occurs with bad pivots but randomization makes this negligible.
 
-Recurrence Analysis:
-- MergeSort: T(n) = 2T(n/2) + Θ(n) → Θ(n log n).
-- QuickSort: T(n) = T(k) + T(n−k−1) + Θ(n), average Θ(n log n).
-- Select: T(n) = T(n/5) + T(7n/10) + Θ(n) → Θ(n).
-- Closest Pair: T(n) = 2T(n/2) + Θ(n) → Θ(n log n).
+Deterministic Select
+Recurrencea: T(n) ≤ T(n/5) + T(7n/10) + O(n)  
+Method: Master Theorem-like analysis  
+Result: Θ(n)  
+Median-of-medians guarantees the pivot eliminates at least 30% of elements. The recurrence solves to linear time because the subproblem sizes decrease geometrically.
 
-Summary
-- Theory and measurements mostly agree.
-- QuickSort faster in practice despite worse worst-case.
-- Deterministic Select is slower on small n but scales linearly as predicted.
+Closest Pair
+Recurrence: T(n) = 2T(n/2) + O(n)  
+Method: Master Theorem Case 2  
+Result: Θ(n log n)  
+Split into two halves recursively, then linear-time strip check. The 7-neighbor rule in the strip ensures linear work during conquer phase.
