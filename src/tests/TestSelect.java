@@ -1,4 +1,4 @@
-package test;
+package tests;
 import algorithms.QuickSelect;
 import utils.Metrics;
 import java.util.Arrays;
